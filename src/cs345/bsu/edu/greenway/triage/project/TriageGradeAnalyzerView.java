@@ -80,23 +80,61 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private void listenForGeneratorButtonClick(Button button){
-        button.setOnAction(event -> retrieveTriageGrade());
+        button.setOnAction(event -> retrieveTriageGrade(button));
     }
 
 
-    private void retrieveTriageGrade() {
+    private void retrieveTriageGrade(Button button) {
+        disableButton(button);
         checkForPastRetrievals();
         String numerator = numeratorField.getText();
         String denominator = denominatorField.getText();
-        controller.setNums(numerator, denominator);
-        String grade = controller.getAnalyzedGrade();
-        Label responseLabel = new Label("Response: ");
-        responseLabel.setFont(analyzerFont);
-        Label gradeLabel = new Label (grade);
-        gradeLabel.setFont(analyzerFont);
-        responseComponents.getChildren().addAll(responseLabel, gradeLabel);
-        responseComponents.setAlignment(Pos.CENTER);
-        gradeAnalyzer.getChildren().addAll(responseComponents);
+        if (controller.attemptToSetNums(numerator, denominator)){
+            if (controller.checkTriageGradingNumbers()){
+                String grade = controller.getAnalyzedGrade();
+                Label responseLabel = new Label("Response: ");
+                responseLabel.setFont(analyzerFont);
+                Label gradeLabel = new Label (grade);
+                gradeLabel.setFont(analyzerFont);
+                responseComponents.getChildren().addAll(responseLabel, gradeLabel);
+                responseComponents.setAlignment(Pos.CENTER);
+                reEnableButton(button);
+                gradeAnalyzer.getChildren().addAll(responseComponents);
+            }
+            else{
+                controller.incrementAttemptedRetrievals();
+                checkForPastRetrievals();
+                Label responseLabel = new Label ("Error: This is not a Triage Grade!");
+                responseLabel.setFont(analyzerFont);
+                responseComponents.getChildren().addAll(responseLabel);
+                responseComponents.setAlignment(generalAlignment);
+                reEnableButton(button);
+                gradeAnalyzer.getChildren().addAll(responseComponents);
+            }
+        }
+        else{
+            controller.incrementAttemptedRetrievals();
+            checkForPastRetrievals();
+            Label responseLabel = new Label ("Error: Only numbers can exist in Grades!");
+            responseLabel.setFont(analyzerFont);
+            responseComponents.getChildren().addAll(responseLabel);
+            responseComponents.setAlignment(generalAlignment);
+            reEnableButton(button);
+            gradeAnalyzer.getChildren().addAll(responseComponents);
+        }
+
+    }
+
+    private void checkCorrectTriageNumbers(){
+
+    }
+
+    private void disableButton(Button button){
+        button.setDisable(true);
+    }
+
+    private void reEnableButton(Button button){
+        button.setDisable(false);
     }
 
     private void checkForPastRetrievals(){
@@ -109,7 +147,7 @@ public class TriageGradeAnalyzerView extends Application{
 
 
     private Label createMainLabel(){
-        Label analyzingLabel = new Label("Analyze Your Received Grade");
+        Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Grade");
         analyzingLabel.setFont(analyzerFont);
         return analyzingLabel;
     }
@@ -121,7 +159,7 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private Button createGenerateButton(){
-        Button generateButton = new Button("Generate Grade");
+        Button generateButton = new Button("Generate Actual Grade");
         generateButton.setFont(analyzerFont);
         return generateButton;
     }
