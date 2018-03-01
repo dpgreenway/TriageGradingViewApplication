@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class JavaViewClass extends Application{
+public class TriageGradeAnalyzerView extends Application{
 
     private Stage primaryStage;
     private Font analyzerFont;
