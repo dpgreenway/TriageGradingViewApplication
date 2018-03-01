@@ -22,6 +22,9 @@ public class TriageGradeAnalyzerView extends Application{
     private TextField numeratorField;
     private TextField denominatorField;
     private VBox gradeAnalyzer;
+    private TriageController controller = new TriageController();
+    private HBox responseComponents = new HBox();
+    private int spacing = 20;
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -31,7 +34,7 @@ public class TriageGradeAnalyzerView extends Application{
         VBox titlePage = new VBox();
         titlePage.getChildren().addAll(title, beginButton);
         titlePage.setAlignment(generalAlignment);
-        titlePage.setSpacing(20);
+        titlePage.setSpacing(spacing);
         Scene scene = new Scene(titlePage,SCENE_WIDTH, SCENE_HEIGHT);
         primaryStage.setTitle("Reading Triage Grades");
         primaryStage.setScene(scene);
@@ -66,11 +69,11 @@ public class TriageGradeAnalyzerView extends Application{
         Label divisionSign = createDivisionSign();
         denominatorField = new TextField();
         HBox fractionInput = new HBox(numeratorField, divisionSign, denominatorField);
-        fractionInput.setAlignment(Pos.CENTER);
+        fractionInput.setAlignment(generalAlignment);
         Button generateButton = createGenerateButton();
         gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
-        gradeAnalyzer.setAlignment(Pos.CENTER);
-        gradeAnalyzer.setSpacing(20);
+        gradeAnalyzer.setAlignment(generalAlignment);
+        gradeAnalyzer.setSpacing(spacing);
         primaryStage.setTitle("Analyzing Your Triage Grading Scores");
         primaryStage.setScene(new Scene(gradeAnalyzer, SCENE_WIDTH, SCENE_HEIGHT));
         listenForGeneratorButtonClick(generateButton);
@@ -82,16 +85,26 @@ public class TriageGradeAnalyzerView extends Application{
 
 
     private void retrieveTriageGrade() {
+        checkForPastRetrievals();
         String numerator = numeratorField.getText();
         String denominator = denominatorField.getText();
-        TriageController controller = new TriageController(numerator, denominator);
+        controller.setNums(numerator, denominator);
         String grade = controller.getAnalyzedGrade();
         Label responseLabel = new Label("Response: ");
         responseLabel.setFont(analyzerFont);
         Label gradeLabel = new Label (grade);
         gradeLabel.setFont(analyzerFont);
-        HBox responseComponents = new HBox(responseLabel, gradeLabel);
+        responseComponents.getChildren().addAll(responseLabel, gradeLabel);
+        responseComponents.setAlignment(Pos.CENTER);
         gradeAnalyzer.getChildren().addAll(responseComponents);
+    }
+
+    private void checkForPastRetrievals(){
+        if (controller.getNumberOfRetrievals() > 0){
+            responseComponents.getChildren().clear();
+            responseComponents.getChildren().addAll();
+            gradeAnalyzer.getChildren().remove(responseComponents);
+        }
     }
 
 
@@ -116,5 +129,7 @@ public class TriageGradeAnalyzerView extends Application{
     private Font setAnalyzerFont(){
         return new Font ("Serif", 36);
     }
+
+
 
 }
