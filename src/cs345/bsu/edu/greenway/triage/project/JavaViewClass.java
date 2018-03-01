@@ -14,24 +14,42 @@ import javafx.stage.Stage;
 public class JavaViewClass extends Application{
 
     private Stage primaryStage;
+    private Font analyzerFont;
+    private Font openingPageFont;
+    private final int SCENE_WIDTH = 800;
+    private final int SCENE_HEIGHT = 500;
+    private Pos generalAlignment = Pos.CENTER;
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        Button beginButton = new Button("Learn How to Read My Scores");
-        beginButton.setFont(new Font("Serif", 24));
-
-        Label initialLabel = new Label("Reading Triage Grades in Blackboard or Canvas");
-        initialLabel.setFont(new Font("Serif", 36));
-
+        openingPageFont = setOpeningFont();
+        Label title = createOpeningLabel();
+        Button beginButton = createOpeningButton();
         VBox titlePage = new VBox();
-        titlePage.getChildren().addAll(initialLabel, beginButton);
-        titlePage.setAlignment(Pos.CENTER);
+        titlePage.getChildren().addAll(title, beginButton);
+        titlePage.setAlignment(generalAlignment);
         titlePage.setSpacing(20);
-        Scene scene = new Scene(titlePage, 800, 500);
+        Scene scene = new Scene(titlePage,SCENE_WIDTH, SCENE_HEIGHT);
         primaryStage.setTitle("Reading Triage Grades");
         primaryStage.setScene(scene);
         primaryStage.show();
         listenForButtonClick(beginButton);
+    }
+
+    private Font setOpeningFont(){
+        return new Font("Serif", 24);
+    }
+
+    private Button createOpeningButton(){
+        Button beginButton = new Button("See How My Scores Should Be Read");
+        beginButton.setFont(openingPageFont);
+        return beginButton;
+    }
+
+    private Label createOpeningLabel(){
+        Label mainLabel = new Label("How To Read Your Triage Grades From Blackboard or Canvas");
+        mainLabel.setFont(openingPageFont);
+        return mainLabel;
     }
 
     private void listenForButtonClick(Button button){
@@ -39,24 +57,41 @@ public class JavaViewClass extends Application{
     }
 
     private void buildScene2(){
-        Label initialLabel = new Label("Analyze Your Received Grade");
-        initialLabel.setFont(new Font ("Serif", 36));
-
-
+        analyzerFont = setAnalyzerFont();
+        Label mainScreenLabel = createMainLabel();
         TextField numerator = new TextField();
-        Label divisionSign = new Label("/");
-        divisionSign.setFont(new Font ("Serif", 36));
-        TextField denomenator = new TextField();
-        HBox fractionInput = new HBox(numerator, divisionSign, denomenator);
-
-        Button generateButton = new Button("Generate Grade");
-        generateButton.setFont(new Font ("Serif", 36));
-        VBox gradeAnalyzer = new VBox(initialLabel, fractionInput, generateButton);
-
-        primaryStage.setTitle("Page 2");
-        primaryStage.setScene(new Scene(gradeAnalyzer, 800, 500));
+        Label divisionSign = createDivisionSign();
+        TextField denominator = new TextField();
+        HBox fractionInput = new HBox(numerator, divisionSign, denominator);
+        fractionInput.setAlignment(Pos.CENTER);
+        Button generateButton = createGenerateButton();
+        VBox gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
+        gradeAnalyzer.setAlignment(Pos.CENTER);
+        gradeAnalyzer.setSpacing(20);
+        primaryStage.setTitle("Analyzing Your Triage Grading Scores");
+        primaryStage.setScene(new Scene(gradeAnalyzer, SCENE_WIDTH, SCENE_HEIGHT));
     }
 
+    private Label createMainLabel(){
+        Label analyzingLabel = new Label("Analyze Your Received Grade");
+        analyzingLabel.setFont(analyzerFont);
+        return analyzingLabel;
+    }
 
+    private Label createDivisionSign(){
+        Label divisionSign = new Label("/");
+        divisionSign.setFont(analyzerFont);
+        return divisionSign;
+    }
+
+    private Button createGenerateButton(){
+        Button generateButton = new Button("Generate Grade");
+        generateButton.setFont(analyzerFont);
+        return generateButton;
+    }
+
+    private Font setAnalyzerFont(){
+        return new Font ("Serif", 36);
+    }
 
 }
