@@ -19,6 +19,8 @@ public class TriageGradeAnalyzerView extends Application{
     private final int SCENE_WIDTH = 800;
     private final int SCENE_HEIGHT = 500;
     private Pos generalAlignment = Pos.CENTER;
+    private TextField numeratorField;
+    private TextField denominatorField;
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -59,10 +61,10 @@ public class TriageGradeAnalyzerView extends Application{
     private void buildScene2(){
         analyzerFont = setAnalyzerFont();
         Label mainScreenLabel = createMainLabel();
-        TextField numerator = new TextField();
+        numeratorField = new TextField();
         Label divisionSign = createDivisionSign();
-        TextField denominator = new TextField();
-        HBox fractionInput = new HBox(numerator, divisionSign, denominator);
+        denominatorField = new TextField();
+        HBox fractionInput = new HBox(numeratorField, divisionSign, denominatorField);
         fractionInput.setAlignment(Pos.CENTER);
         Button generateButton = createGenerateButton();
         VBox gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
@@ -70,6 +72,18 @@ public class TriageGradeAnalyzerView extends Application{
         gradeAnalyzer.setSpacing(20);
         primaryStage.setTitle("Analyzing Your Triage Grading Scores");
         primaryStage.setScene(new Scene(gradeAnalyzer, SCENE_WIDTH, SCENE_HEIGHT));
+        listenForGeneratorButtonClick(generateButton);
+    }
+
+    private void listenForGeneratorButtonClick(Button button){
+        button.setOnAction(event -> sendNumbersToController());
+    }
+
+    private void sendNumbersToController() {
+        String numerator = numeratorField.getText();
+        String denominator = denominatorField.getText();
+        TriageController controller = new TriageController(numerator, denominator);
+        controller.getAnalyzedGrade();
     }
 
     private Label createMainLabel(){
