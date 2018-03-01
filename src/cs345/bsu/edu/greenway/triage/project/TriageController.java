@@ -3,7 +3,6 @@ package cs345.bsu.edu.greenway.triage.project;
 public class TriageController {
     private int numerator;
     private int denominator;
-    private String analyzedGrade;
 
     TriageController(String numerator, String denominator){
         this.numerator = Integer.parseInt(numerator);
@@ -12,7 +11,8 @@ public class TriageController {
 
     public String getAnalyzedGrade(){
         TriageGradeAnalyzer analyzer = new TriageGradeAnalyzer(numerator, denominator);
-        analyzedGrade = analyzer.calculateAssignmentGrade();
+        String analyzedGrade = analyzer.calculateAssignmentGrade();
+        System.out.print("Controller " + analyzedGrade);
         return analyzedGrade;
     }
 

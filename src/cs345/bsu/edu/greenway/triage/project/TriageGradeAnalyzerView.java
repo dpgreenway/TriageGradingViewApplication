@@ -21,6 +21,7 @@ public class TriageGradeAnalyzerView extends Application{
     private Pos generalAlignment = Pos.CENTER;
     private TextField numeratorField;
     private TextField denominatorField;
+    private VBox gradeAnalyzer;
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -67,7 +68,7 @@ public class TriageGradeAnalyzerView extends Application{
         HBox fractionInput = new HBox(numeratorField, divisionSign, denominatorField);
         fractionInput.setAlignment(Pos.CENTER);
         Button generateButton = createGenerateButton();
-        VBox gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
+        gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
         gradeAnalyzer.setAlignment(Pos.CENTER);
         gradeAnalyzer.setSpacing(20);
         primaryStage.setTitle("Analyzing Your Triage Grading Scores");
@@ -76,15 +77,23 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private void listenForGeneratorButtonClick(Button button){
-        button.setOnAction(event -> sendNumbersToController());
+        button.setOnAction(event -> retrieveTriageGrade());
     }
 
-    private void sendNumbersToController() {
+
+    private void retrieveTriageGrade() {
         String numerator = numeratorField.getText();
         String denominator = denominatorField.getText();
         TriageController controller = new TriageController(numerator, denominator);
-        controller.getAnalyzedGrade();
+        String grade = controller.getAnalyzedGrade();
+        Label responseLabel = new Label("Response: ");
+        responseLabel.setFont(analyzerFont);
+        Label gradeLabel = new Label (grade);
+        gradeLabel.setFont(analyzerFont);
+        HBox responseComponents = new HBox(responseLabel, gradeLabel);
+        gradeAnalyzer.getChildren().addAll(responseComponents);
     }
+
 
     private Label createMainLabel(){
         Label analyzingLabel = new Label("Analyze Your Received Grade");
