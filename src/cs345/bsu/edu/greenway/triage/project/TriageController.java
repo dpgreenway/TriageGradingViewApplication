@@ -18,7 +18,7 @@ public class TriageController {
     }
 
     public boolean checkTriageGradingNumbers(){
-        return (denominator%3 == 0);
+        return (denominator%3 == 0) && (denominator != 0);
     }
 
     public void incrementAttemptedRetrievals(){

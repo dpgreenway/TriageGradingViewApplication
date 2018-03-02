@@ -10,6 +10,14 @@ public class TriageGradeAnalyzer {
         this.denominator = denominator;
     }
 
+    public void setNumerator(int numerator){
+        this.numerator = numerator;
+    }
+
+    public void setDenominator(int denominator){
+        this.denominator = denominator;
+    }
+
     public String calculateAssignmentGrade() {
         int gradeWidth = calculateLetterGradeWidth(denominator);
         return mapGradeToScore(gradeWidth, numerator);
