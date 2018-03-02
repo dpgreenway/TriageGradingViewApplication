@@ -47,23 +47,23 @@ public class TriageGradeAnalyzerView extends Application{
         return new Font("Serif", 24);
     }
 
-    private Button createOpeningButton(){
-        Button beginButton = new Button("Analyze My Scores");
-        beginButton.setFont(openingPageFont);
-        return beginButton;
-    }
-
     private Label createOpeningLabel(){
         Label mainLabel = new Label("How To Read Your Triage Grades From Blackboard or Canvas");
         mainLabel.setFont(openingPageFont);
         return mainLabel;
     }
 
-    private void listenForButtonClick(Button button){
-        button.setOnAction(event -> buildScene2());
+    private Button createOpeningButton(){
+        Button beginButton = new Button("Analyze My Scores");
+        beginButton.setFont(openingPageFont);
+        return beginButton;
     }
 
-    private void buildScene2(){
+    private void listenForButtonClick(Button button){
+        button.setOnAction(event -> buildAnalyzerScene());
+    }
+
+    private void buildAnalyzerScene(){
         analyzerFont = setAnalyzerFont();
         Label mainScreenLabel = createMainLabel();
         numeratorField = new TextField();
@@ -80,6 +80,28 @@ public class TriageGradeAnalyzerView extends Application{
         listenForGeneratorButtonClick(generatorButton);
     }
 
+    private Font setAnalyzerFont(){
+        return new Font ("Serif", 36);
+    }
+
+    private Label createMainLabel(){
+        Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Triage Grade");
+        analyzingLabel.setFont(analyzerFont);
+        return analyzingLabel;
+    }
+
+    private Label createDivisionSign(){
+        Label divisionSign = new Label("/");
+        divisionSign.setFont(analyzerFont);
+        return divisionSign;
+    }
+
+    private Button createGenerateButton(){
+        Button generateButton = new Button("Generate Triage Grade Interpretation");
+        generateButton.setFont(analyzerFont);
+        return generateButton;
+    }
+
     private void listenForGeneratorButtonClick(Button button){
         button.setOnAction(event -> retrieveTriageGrade());
     }
@@ -91,8 +113,23 @@ public class TriageGradeAnalyzerView extends Application{
         String numerator = numeratorField.getText();
         String denominator = denominatorField.getText();
         displayResponse(numerator, denominator);
-        }
+    }
 
+    private void disableButton(Button button){
+        button.setDisable(true);
+    }
+
+    private void reEnableButton(Button button){
+        button.setDisable(false);
+    }
+
+    private void checkForPastRetrievals(){
+        if (controller.getNumberOfRetrievals() > 0){
+            responseComponents.getChildren().clear();
+            responseComponents.getChildren().addAll();
+            gradeAnalyzer.getChildren().remove(responseComponents);
+        }
+    }
 
     private void displayResponse(String numerator, String denominator){
         if (controller.attemptToSetNums(numerator, denominator)) {
@@ -130,43 +167,14 @@ public class TriageGradeAnalyzerView extends Application{
         gradeAnalyzer.getChildren().addAll(responseComponents);
     }
 
-    private void disableButton(Button button){
-        button.setDisable(true);
-    }
 
-    private void reEnableButton(Button button){
-        button.setDisable(false);
-    }
 
-    private void checkForPastRetrievals(){
-        if (controller.getNumberOfRetrievals() > 0){
-            responseComponents.getChildren().clear();
-            responseComponents.getChildren().addAll();
-            gradeAnalyzer.getChildren().remove(responseComponents);
-        }
-    }
 
-    private Label createMainLabel(){
-        Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Triage Grade");
-        analyzingLabel.setFont(analyzerFont);
-        return analyzingLabel;
-    }
 
-    private Label createDivisionSign(){
-        Label divisionSign = new Label("/");
-        divisionSign.setFont(analyzerFont);
-        return divisionSign;
-    }
 
-    private Button createGenerateButton(){
-        Button generateButton = new Button("Generate Triage Grade Interpretation");
-        generateButton.setFont(analyzerFont);
-        return generateButton;
-    }
 
-    private Font setAnalyzerFont(){
-        return new Font ("Serif", 36);
-    }
+
+
 
 
 
