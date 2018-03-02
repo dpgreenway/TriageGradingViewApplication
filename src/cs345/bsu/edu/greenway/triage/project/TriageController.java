@@ -16,11 +16,10 @@ public class TriageController {
             System.out.println("This is not an integer value.");
             return false;
         }
-
     }
 
     public boolean checkTriageGradingNumbers(){
-        return ((numerator <= denominator) && (denominator%3 == 0));
+        return (denominator%3 == 0);
     }
 
     public void incrementAttemptedRetrievals(){
@@ -35,9 +34,7 @@ public class TriageController {
         return analyzedGrade;
     }
 
-
     public int getNumberOfRetrievals(){
         return numberOfRetrievals;
     }
-
 }

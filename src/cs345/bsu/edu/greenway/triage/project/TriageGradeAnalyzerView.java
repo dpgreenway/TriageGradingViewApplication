@@ -25,6 +25,7 @@ public class TriageGradeAnalyzerView extends Application{
     private TriageController controller = new TriageController();
     private HBox responseComponents = new HBox();
     private int spacing = 20;
+    private Button generatorButton;
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -70,63 +71,64 @@ public class TriageGradeAnalyzerView extends Application{
         denominatorField = new TextField();
         HBox fractionInput = new HBox(numeratorField, divisionSign, denominatorField);
         fractionInput.setAlignment(generalAlignment);
-        Button generateButton = createGenerateButton();
-        gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generateButton);
+        generatorButton = createGenerateButton();
+        gradeAnalyzer = new VBox(mainScreenLabel, fractionInput, generatorButton);
         gradeAnalyzer.setAlignment(generalAlignment);
         gradeAnalyzer.setSpacing(spacing);
         primaryStage.setTitle("Analyzing Your Triage Grading Scores");
         primaryStage.setScene(new Scene(gradeAnalyzer, SCENE_WIDTH, SCENE_HEIGHT));
-        listenForGeneratorButtonClick(generateButton);
+        listenForGeneratorButtonClick(generatorButton);
     }
 
     private void listenForGeneratorButtonClick(Button button){
-        button.setOnAction(event -> retrieveTriageGrade(button));
+        button.setOnAction(event -> retrieveTriageGrade());
     }
 
 
-    private void retrieveTriageGrade(Button button) {
-        disableButton(button);
+    private void retrieveTriageGrade() {
+        disableButton(generatorButton);
         checkForPastRetrievals();
         String numerator = numeratorField.getText();
         String denominator = denominatorField.getText();
-        if (controller.attemptToSetNums(numerator, denominator)){
-            if (controller.checkTriageGradingNumbers()){
-                String grade = controller.getAnalyzedGrade();
-                Label responseLabel = new Label("Response: ");
-                responseLabel.setFont(analyzerFont);
-                Label gradeLabel = new Label (grade);
-                gradeLabel.setFont(analyzerFont);
-                responseComponents.getChildren().addAll(responseLabel, gradeLabel);
-                responseComponents.setAlignment(Pos.CENTER);
-                reEnableButton(button);
-                gradeAnalyzer.getChildren().addAll(responseComponents);
-            }
-            else{
-                controller.incrementAttemptedRetrievals();
-                checkForPastRetrievals();
-                Label responseLabel = new Label ("Error: This is not a Triage Grade!");
-                responseLabel.setFont(analyzerFont);
-                responseComponents.getChildren().addAll(responseLabel);
-                responseComponents.setAlignment(generalAlignment);
-                reEnableButton(button);
-                gradeAnalyzer.getChildren().addAll(responseComponents);
-            }
+        displayResponse(numerator, denominator);
+        }
+
+
+    private void displayResponse(String numerator, String denominator){
+        if (controller.attemptToSetNums(numerator, denominator)) {
+            checkToDisplayWithoutError();
         }
         else{
             controller.incrementAttemptedRetrievals();
-            checkForPastRetrievals();
-            Label responseLabel = new Label ("Error: Only numbers can exist in Grades!");
-            responseLabel.setFont(analyzerFont);
-            responseComponents.getChildren().addAll(responseLabel);
-            responseComponents.setAlignment(generalAlignment);
-            reEnableButton(button);
-            gradeAnalyzer.getChildren().addAll(responseComponents);
+            displayWithError("Error: This is not a Triage Grade!");
+
         }
 
     }
+    private void checkToDisplayWithoutError() {
+        if (controller.checkTriageGradingNumbers()) {
+            String grade = controller.getAnalyzedGrade();
+            Label responseLabel = new Label("Response: ");
+            responseLabel.setFont(analyzerFont);
+            Label gradeLabel = new Label(grade);
+            gradeLabel.setFont(analyzerFont);
+            responseComponents.getChildren().addAll(responseLabel, gradeLabel);
+            responseComponents.setAlignment(generalAlignment);
+            reEnableButton(generatorButton);
+            gradeAnalyzer.getChildren().addAll(responseComponents);
+        } else {
+            displayWithError("Error: Only numbers can exist in Grades!");
+        }
+    }
 
-    private void checkCorrectTriageNumbers(){
-
+    private void displayWithError(String message) {
+        checkForPastRetrievals();
+        Label responseLabel = new Label(message);
+        responseLabel.setFont(analyzerFont);
+        responseComponents.getChildren().addAll(responseLabel);
+        responseComponents.setAlignment(generalAlignment);
+        reEnableButton(generatorButton);
+        gradeAnalyzer.getChildren().addAll(responseComponents);
     }
 
     private void disableButton(Button button){
@@ -144,7 +146,6 @@ public class TriageGradeAnalyzerView extends Application{
             gradeAnalyzer.getChildren().remove(responseComponents);
         }
     }
-
 
     private Label createMainLabel(){
         Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Grade");
