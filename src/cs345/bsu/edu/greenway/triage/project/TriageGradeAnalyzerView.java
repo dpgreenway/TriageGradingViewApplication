@@ -137,7 +137,7 @@ public class TriageGradeAnalyzerView extends Application{
         }
         else{
             controller.incrementAttemptedRetrievals();
-            displayWithError("Error: This is not a Triage Grade!");
+            displayWithError("Error: Only numbers can exist in Grades!");
         }
 
     }
@@ -153,7 +153,8 @@ public class TriageGradeAnalyzerView extends Application{
             reEnableButton(generatorButton);
             gradeAnalyzer.getChildren().addAll(responseComponents);
         } else {
-            displayWithError("Error: Only numbers can exist in Grades!");
+            controller.incrementAttemptedRetrievals();
+            displayWithError("Error: This is not a Triage Grade!");
         }
     }
 

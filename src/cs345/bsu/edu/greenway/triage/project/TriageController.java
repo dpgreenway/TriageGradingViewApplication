@@ -13,7 +13,6 @@ public class TriageController {
             return true;
         }
         catch (Exception e){
-            System.out.println("This is not an integer value.");
             return false;
         }
     }
@@ -29,9 +28,7 @@ public class TriageController {
     public String getAnalyzedGrade(){
         incrementAttemptedRetrievals();
         TriageGradeAnalyzer analyzer = new TriageGradeAnalyzer(numerator, denominator);
-        String analyzedGrade = analyzer.calculateAssignmentGrade();
-        System.out.print("Controller " + analyzedGrade);
-        return analyzedGrade;
+        return analyzer.calculateAssignmentGrade();
     }
 
     public int getNumberOfRetrievals(){
