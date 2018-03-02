@@ -48,7 +48,7 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private Button createOpeningButton(){
-        Button beginButton = new Button("See How My Scores Should Be Read");
+        Button beginButton = new Button("Analyze My Scores");
         beginButton.setFont(openingPageFont);
         return beginButton;
     }
@@ -101,14 +101,13 @@ public class TriageGradeAnalyzerView extends Application{
         else{
             controller.incrementAttemptedRetrievals();
             displayWithError("Error: This is not a Triage Grade!");
-
         }
 
     }
     private void checkToDisplayWithoutError() {
         if (controller.checkTriageGradingNumbers()) {
             String grade = controller.getAnalyzedGrade();
-            Label responseLabel = new Label("Response: ");
+            Label responseLabel = new Label("Grade: ");
             responseLabel.setFont(analyzerFont);
             Label gradeLabel = new Label(grade);
             gradeLabel.setFont(analyzerFont);
@@ -148,7 +147,7 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private Label createMainLabel(){
-        Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Grade");
+        Label analyzingLabel = new Label("Analyze Your Blackboard/Canvas Triage Grade");
         analyzingLabel.setFont(analyzerFont);
         return analyzingLabel;
     }
@@ -160,7 +159,7 @@ public class TriageGradeAnalyzerView extends Application{
     }
 
     private Button createGenerateButton(){
-        Button generateButton = new Button("Generate Actual Grade");
+        Button generateButton = new Button("Generate Triage Grade Interpretation");
         generateButton.setFont(analyzerFont);
         return generateButton;
     }
